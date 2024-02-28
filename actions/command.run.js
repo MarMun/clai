@@ -4,6 +4,7 @@ import chalk from 'chalk'
 
 function run (command) {
   return new Promise(async (resolve, reject) => {
+    console.log(chalk.gray('-'))
 
     const child = spawn(
       command , {
