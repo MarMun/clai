@@ -13,21 +13,12 @@ function terminalNerd (question) {
   `
 }
 
-function commandCleaner (text) {
-  return `
-    Remove markdown formatting: ${text}
-  `
-}
-
 function run (question) {
   return new Promise(async (resolve, reject) => {
     // Call llm ---
     let answer = await api.call(terminalNerd(question))
-    // const command = await api.call(commandCleaner(answer))
-    // console.log('command', command)
-    // QA response ---
 
-    // remove new lines
+    // QA response
     answer = answer.replace(/\r?\n/g, '')
     answer = answer.trim()
 
