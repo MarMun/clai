@@ -4,7 +4,7 @@ mod api;
 use console::Term;
 use std::env;
 
-use crate::actions::choice::UserChoice;
+use crate::actions::user::UserChoice;
 
 #[tokio::main]
 async fn main() {
@@ -21,7 +21,7 @@ async fn main() {
 
     loop {
         // get user choice
-        let choice = actions::choice::ask().expect("Couldn't read choice");
+        let choice = actions::user::ask().expect("Couldn't read choice");
 
         // valid user inputs
         match choice {
