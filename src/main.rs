@@ -4,6 +4,8 @@ mod api;
 use console::Term;
 use std::env;
 
+use crate::actions::choice::UserChoice;
+
 #[tokio::main]
 async fn main() {
     // get question from args
@@ -20,28 +22,27 @@ async fn main() {
     loop {
         // get user choice
         let choice = actions::choice::ask().expect("Couldn't read choice");
-        let choice = choice.as_str();
 
         // valid user inputs
-        if ["\n", "r"].contains(&choice) {
-            actions::execute::run(&command);
-            break;
+        match choice {
+            UserChoice::Abort => {
+                break;
+            }
+            UserChoice::Run => {
+                actions::execute::run(&command);
+                break;
+            }
+            UserChoice::Clip => {
+                actions::clipboard::put(&command);
+                break;
+            }
+            UserChoice::Explain => {
+                actions::explain::get(&command);
+                continue;
+            }
+            UserChoice::Invalid => {
+                continue;
+            }
         }
-
-        if choice == "c" {
-            actions::clipboard::put(&command);
-            break;
-        }
-
-        if choice == "a" {
-            break;
-        }
-
-        if choice == "e" {
-            actions::explain::get(&command);
-        }
-
-        // any other user input
-        continue;
     }
 }

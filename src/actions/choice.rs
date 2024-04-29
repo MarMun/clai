@@ -1,6 +1,13 @@
 use console::{style, Term};
 use std::error::Error;
 
+pub enum UserChoice {
+    Run,
+    Explain,
+    Clip,
+    Abort,
+    Invalid,
+}
 fn options() -> String {
     // Run
     let icon = style("󰌑").for_stdout().color256(192);
@@ -22,7 +29,7 @@ fn options() -> String {
     format!("{run} | {explain} | {clip} | {abort}")
 }
 
-pub fn ask() -> Result<String, Box<dyn Error>> {
+pub fn ask() -> Result<UserChoice, Box<dyn Error>> {
     let term = Term::stdout();
 
     // Add options ui
@@ -31,9 +38,19 @@ pub fn ask() -> Result<String, Box<dyn Error>> {
 
     // Read args from stdin
     let choice = term.read_char()?;
+    let choice = choice.to_string();
+    let choice = choice.as_str();
 
     // Remove options ui
     let _ = term.clear_last_lines(1);
 
-    Ok(String::from(choice))
+    let choice = match choice {
+        "\n" | "r" => UserChoice::Run,
+        "c" => UserChoice::Clip,
+        "e" => UserChoice::Explain,
+        "a" => UserChoice::Abort,
+        _ => UserChoice::Invalid,
+    };
+
+    Ok(choice)
 }
