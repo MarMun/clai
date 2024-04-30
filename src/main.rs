@@ -3,8 +3,29 @@ mod api;
 
 use std::env;
 
+use actions::command::*;
 use actions::user::*;
 use actions::*;
+
+#[derive(Debug, Clone)]
+pub enum AlertLevel {
+    Danger,
+    Warning,
+    Safe,
+    Neutral,
+}
+
+impl AlertLevel {
+    pub fn from_string(level: &str) -> Self {
+        match level.trim() {
+            "Danger" => Self::Danger,
+            "Warning" => Self::Warning,
+            "Safe" => Self::Safe,
+            "Neutral" => Self::Neutral,
+            _ => panic!("Unknown Alert level"),
+        }
+    }
+}
 
 #[tokio::main]
 async fn main() {
@@ -13,12 +34,13 @@ async fn main() {
     let question = args[1..].join(" ");
 
     // create command
-    let command = build::run(&question).await;
+    let command = Command::build(&question).await;
 
     // present command
+    // WTF: Why do I need to clone a enum??
     user::tell(UserMessage {
-        message_type: MessageType::Neutral,
-        body: command.to_string(),
+        level: command.level.clone(),
+        body: command.itself.clone(),
     });
 
     loop {
@@ -31,15 +53,15 @@ async fn main() {
                 break;
             }
             UserChoice::Run => {
-                execute::run(&command);
+                command.run();
                 break;
             }
             UserChoice::Clip => {
-                clipboard::put(&command);
+                clipboard::put(&command.itself);
                 break;
             }
             UserChoice::Explain => {
-                explain::show(&command);
+                explain::show(&command.itself);
                 continue;
             }
             UserChoice::Invalid => {

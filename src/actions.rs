@@ -1,5 +1,4 @@
-pub mod build;
 pub mod clipboard;
-pub mod execute;
+pub mod command;
 pub mod explain;
 pub mod user;

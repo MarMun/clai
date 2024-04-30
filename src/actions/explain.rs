@@ -1,8 +1,11 @@
-use crate::actions::user::{tell, MessageType, UserMessage};
+use crate::{
+    actions::user::{tell, UserMessage},
+    AlertLevel,
+};
 
 pub fn show(command: &str) {
     tell(UserMessage {
-        message_type: MessageType::Neutral,
+        level: AlertLevel::Neutral,
         body: format!("Would explain {command}"),
     });
 }

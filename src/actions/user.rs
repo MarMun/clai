@@ -1,15 +1,10 @@
 use console::{style, StyledObject, Term};
 use std::error::Error;
 
-pub enum MessageType {
-    Danger,
-    Warning,
-    Save,
-    Neutral,
-}
+use crate::AlertLevel;
 
 pub struct UserMessage {
-    pub message_type: MessageType,
+    pub level: AlertLevel,
     pub body: String,
 }
 
@@ -77,11 +72,11 @@ fn icon_create(icon: String) -> StyledObject<String> {
 pub fn tell(message: UserMessage) {
     let term = Term::stdout();
 
-    let icon = match message.message_type {
-        MessageType::Save => icon_create("+".to_string()).green(),
-        MessageType::Danger => icon_create("!".to_string()).red(),
-        MessageType::Warning => icon_create("X".to_string()).yellow(),
-        MessageType::Neutral => icon_create(">".to_string()).dim(),
+    let icon = match message.level {
+        AlertLevel::Safe => icon_create("+".to_string()).green(),
+        AlertLevel::Danger => icon_create("!".to_string()).red(),
+        AlertLevel::Warning => icon_create("X".to_string()).yellow(),
+        AlertLevel::Neutral => icon_create(">".to_string()).dim(),
     };
 
     let output = format!("{icon} {0}", message.body);
