@@ -1,10 +1,10 @@
 mod actions;
 mod api;
 
-use console::Term;
 use std::env;
 
-use crate::actions::user::UserChoice;
+use actions::user::*;
+use actions::*;
 
 #[tokio::main]
 async fn main() {
@@ -13,15 +13,17 @@ async fn main() {
     let question = args[1..].join(" ");
 
     // create command
-    let command = actions::build::run(&question).await;
+    let command = build::run(&question).await;
 
     // present command
-    let term = Term::stdout();
-    term.write_line(&command).expect("Couldn't present command");
+    user::tell(UserMessage {
+        message_type: MessageType::Neutral,
+        body: command.to_string(),
+    });
 
     loop {
         // get user choice
-        let choice = actions::user::ask().expect("Couldn't read choice");
+        let choice = user::ask().expect("Couldn't read choice");
 
         // valid user inputs
         match choice {
@@ -29,15 +31,15 @@ async fn main() {
                 break;
             }
             UserChoice::Run => {
-                actions::execute::run(&command);
+                execute::run(&command);
                 break;
             }
             UserChoice::Clip => {
-                actions::clipboard::put(&command);
+                clipboard::put(&command);
                 break;
             }
             UserChoice::Explain => {
-                actions::explain::get(&command);
+                explain::show(&command);
                 continue;
             }
             UserChoice::Invalid => {

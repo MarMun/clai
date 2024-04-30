@@ -1,3 +1,8 @@
+use crate::actions::user::{tell, MessageType, UserMessage};
+
 pub fn put(command: &str) {
-    println!("Would clipboard {command}");
+    tell(UserMessage {
+        message_type: MessageType::Neutral,
+        body: format!("Would clipboard {command}"),
+    });
 }

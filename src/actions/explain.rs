@@ -1,3 +1,8 @@
-pub fn get(command: &str) {
-    println!("Would explain command: {command}");
+use crate::actions::user::{tell, MessageType, UserMessage};
+
+pub fn show(command: &str) {
+    tell(UserMessage {
+        message_type: MessageType::Neutral,
+        body: format!("Would explain {command}"),
+    });
 }
