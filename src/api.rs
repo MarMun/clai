@@ -39,7 +39,6 @@ pub async fn call(prompt: &String, model: Option<&str>) -> Result<String, Box<dy
         .send()
         .await?;
 
-    // let result: HashMap<String, serde_json::Value> = resp.json().await?;
     let result: AiResponse = resp.json().await?;
 
     // println!("{:?}", result);

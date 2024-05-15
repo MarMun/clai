@@ -65,18 +65,18 @@ pub fn ask() -> Result<UserChoice, Box<dyn Error>> {
     Ok(choice)
 }
 
-fn icon_create(icon: String) -> StyledObject<String> {
-    style(icon).for_stdout()
+fn icon_create(icon: &str) -> StyledObject<String> {
+    style(icon.to_string()).for_stdout()
 }
 
 pub fn tell(message: UserMessage) {
     let term = Term::stdout();
 
     let icon = match message.level {
-        AlertLevel::Safe => icon_create("+".to_string()).green(),
-        AlertLevel::Danger => icon_create("!".to_string()).red(),
-        AlertLevel::Warning => icon_create("X".to_string()).yellow(),
-        AlertLevel::Neutral => icon_create(">".to_string()).dim(),
+        AlertLevel::Safe => icon_create("+").green(),
+        AlertLevel::Danger => icon_create("!").red(),
+        AlertLevel::Warning => icon_create("X").yellow(),
+        AlertLevel::Neutral => icon_create(">").dim(),
     };
 
     let output = format!("{icon} {0}", message.body);
