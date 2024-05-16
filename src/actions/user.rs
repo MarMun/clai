@@ -1,5 +1,4 @@
 use console::{style, StyledObject, Term};
-use std::error::Error;
 
 use crate::AlertLevel;
 
@@ -37,14 +36,20 @@ fn ask_options() -> String {
     format!("{run} | {explain} | {clip} | {abort}")
 }
 
-pub fn ask() -> Result<UserChoice, Box<dyn Error>> {
+pub fn ask() -> UserChoice {
     let term = Term::stdout();
 
     // Add options ui
     let options = ask_options();
-    term.write_line(&options)?;
+    match term.write_line(&options) {
+        Ok(v) => v,
+        Err(e) => panic!("{e}"),
+    };
     // Read single char from stdin
-    let choice = term.read_char()?;
+    let choice = match term.read_char() {
+        Ok(v) => v,
+        Err(e) => panic!("{e}"),
+    };
     // Remove ui from stdin
     let _ = term.clear_last_lines(1);
 
@@ -54,15 +59,13 @@ pub fn ask() -> Result<UserChoice, Box<dyn Error>> {
     let choice = choice.as_str();
 
     // Match input
-    let choice = match choice {
+    match choice {
         "\n" | "r" => UserChoice::Run,
         "c" => UserChoice::Clip,
         "e" => UserChoice::Explain,
         "a" => UserChoice::Abort,
         _ => UserChoice::Invalid,
-    };
-
-    Ok(choice)
+    }
 }
 
 fn icon_create(icon: &str) -> StyledObject<String> {

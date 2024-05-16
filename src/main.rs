@@ -22,7 +22,7 @@ impl AlertLevel {
             "Warning" => Self::Warning,
             "Safe" => Self::Safe,
             "Neutral" => Self::Neutral,
-            _ => panic!("Unknown Alert level"),
+            _ => Self::Danger,
         }
     }
 }
@@ -44,14 +44,8 @@ async fn main() {
     });
 
     loop {
-        // get user choice
-        let choice = match user::ask() {
-            Ok(v) => v,
-            Err(e) => panic!("Bad news everyone: {e:#?}"),
-        };
-
         // interpret choice
-        match choice {
+        match user::ask() {
             UserChoice::Abort => {
                 break;
             }
