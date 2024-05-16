@@ -45,9 +45,12 @@ async fn main() {
 
     loop {
         // get user choice
-        let choice = user::ask().expect("Couldn't read choice");
+        let choice = match user::ask() {
+            Ok(v) => v,
+            Err(e) => panic!("Bad news everyone: {e:#?}"),
+        };
 
-        // valid user inputs
+        // interpret choice
         match choice {
             UserChoice::Abort => {
                 break;
